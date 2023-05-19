@@ -1,0 +1,10 @@
+*.egg-info
+.coverage
+.ipynb_checkpoints
+.DS_Store
+Pipfile*
+data/
+*.csv
+**/__pycache__/
+.env*
+.python-version
