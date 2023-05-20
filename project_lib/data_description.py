@@ -479,10 +479,10 @@ def datetime_summary(dataframe: pd.DataFrame) -> None:
     dataframe = dataframe.select_dtypes(include=["datetime"])
 
     # reuse pandas describe method and transpose the dataframe
-    df_aux = dataframe.describe(datetime_is_numeric=True).T
+    df_aux = dataframe.describe().T
 
     # create a range column: diference in months between the min and the max date
-    df_aux["range [months]"] = (df_aux["max"] - df_aux["min"]).dt.days / 30.4375
+    df_aux["range [months]"] = np.ceil((df_aux["max"] - df_aux["min"]).dt.days / 30.4375).astype(int)
 
     # create a column to indicate the number of unique values
     df_aux["nunique"] = dataframe.nunique(dropna=True)
