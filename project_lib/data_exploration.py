@@ -5,7 +5,7 @@
 # import required library to configure module
 import pandas as pd
 from project_lib.initial_config import initial_settings
-from project_lib.input_validation import validate_input_types
+from project_lib.input_validation import validate_input_types, validate_dataframe_cols
 
 # set the basic cofiguration for this module
 initial_settings()
@@ -515,7 +515,7 @@ def plot_cramer_v_heatmap(
         cmap=sns.diverging_palette(20, 220, n=256),
     )
     # define figure details
-    plt.title("SPEARMAN CORRELATION COEFFICIENT")
+    plt.title("CRAMER-V ADJUSTED CORRELATION COEFFICIENT")
     plt.yticks(rotation=0)
 
     # check if user want to save heatmap
@@ -664,3 +664,4 @@ def time_weighted_average(
     weighted_avg = np.nansum(array * weights) / np.nansum(weights)
 
     return weighted_avg
+
