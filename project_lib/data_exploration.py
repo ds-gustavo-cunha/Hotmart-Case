@@ -19,7 +19,7 @@ def numerical_plot(
     dataframe: pd.DataFrame,
     n_cols: int = 3,
     figsize: tuple = None,
-    hist: bool = True,
+    hist: bool = False,
     save_fig: str = None,
 ) -> None:
     """
@@ -52,10 +52,12 @@ def numerical_plot(
     if save_fig is not None:
         validate_input_types({"save_fig": save_fig}, (str,))
 
-    # display information for user
-    print(
-        f"In case the function is taking too much time to plot, you can try: hist = False [default: hist=True]."
-    )
+    # check if hist plot will be done
+    if hist:
+        # display information for user
+        print(
+            f"In case the function is taking too much time to plot, you can try: hist = False [default: hist=True]."
+        )
 
     # get numeric variables
     df_num = dataframe.select_dtypes(include=["number"])

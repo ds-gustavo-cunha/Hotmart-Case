@@ -6,5 +6,6 @@ Pipfile*
 data/
 *.csv
 **/__pycache__/
-.env*
+.env
+.envrc
 .python-version
