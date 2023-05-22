@@ -345,8 +345,10 @@ def check_dataframe(
     """
     It displays the number of NAs, the percentage of NA, the number of unique values and
     the data type for each column.
+
     It can (depending on summary_stats param) also displays dataframe shape and
     also displays statistics for numerical variables.
+
     Finally, it displays the dataframe head or a random sample of dataframe according to user choice.
 
     Args
@@ -359,7 +361,7 @@ def check_dataframe(
         size: size of the dataframe.head() or dataframe.sample() function .
 
     Return
-        None: a none type object
+        None
     """
 
     # import required libraris
