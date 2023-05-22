@@ -9,3 +9,6 @@ data/
 .env
 .envrc
 .python-version
+*mlruns/*
+*artifacts/*
+mlruns/*

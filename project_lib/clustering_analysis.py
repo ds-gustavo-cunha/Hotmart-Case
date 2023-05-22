@@ -16,10 +16,12 @@ initial_settings()
 ################################
 
 
-def silhouette_inspection_pipelined( 
+def silhouette_inspection( 
     dataframe: pd.DataFrame,
-    labels: pd.Series
-) -> None:
+    labels: pd.Series,
+    model_name: str = None,
+    display_figure: bool = True
+) -> dict:
     """      
     Plot silhouette score and shape for each cluster.
     
@@ -30,20 +32,29 @@ def silhouette_inspection_pipelined(
         labels: a Series or array with labels to calculate silhouette 
             according to sklearn.metrics.silhouette_samples and 
             sklearn.metrics.silhouette_score.
-
+        model_name: a str with name to display on plot
+        display_figure: a bool to indicate whether to plot silhouettes or not
+        
     Return
-        None
+        s_report: a dict with mean silhoutte 
+            as well as silhouette per cluster.
     """   
 
     # input verification
     validate_input_types({"dataframe": dataframe}, (pd.core.frame.DataFrame,))
     validate_input_types({"labels": labels}, (pd.core.series.Series, np.ndarray,))
+    if model_name is not None: 
+        validate_input_types({"model_name": model_name}, (str,))
+    validate_input_types({"display_figure": display_figure}, (bool,))
 
     # import required libraries
     from   sklearn.metrics   import silhouette_samples, silhouette_score
     import seaborn           as     sns
     import matplotlib.cm     as     cm
     import matplotlib.pyplot as     plt
+
+    # instanciate a variable to save cluster sillhouettes
+    s_report = {}
 
     # get number of clusters
     unique_clusters = set(labels)
@@ -59,8 +70,14 @@ def silhouette_inspection_pipelined(
         sample_size=None # use all datapoints
     )
 
+    # add s mean to report
+    s_report["s_mean"] = s_score_mean
+
     # set ax title, xlabel and ylabel
-    plt.title(f'    SILHOUETTE\nNumber of clusters: {len(unique_clusters)}\nMean silhouette: {s_score_mean:.3f}\n' )
+    if model_name is not None:
+        plt.title(f'{model_name.upper()} mean silhouette: {s_score_mean:.3f}\n{model_name.upper()} number of clusters: {len(unique_clusters)}' )
+    else:
+        plt.title(f'Mean silhouette: {s_score_mean:.3f}\nNumber of clusters: {len(unique_clusters)}')
     plt.ylabel('Silhouette width proportional \nsamples in each cluster')
     plt.xlabel('Silhoutte Score')
 
@@ -82,6 +99,10 @@ def silhouette_inspection_pipelined(
     for i in unique_clusters:
         # select datapoint of the i-th cluster 
         ith_cluster_samples = samples_silhouette_values[ labels == i ]
+
+        # add cluster silhouette information
+        s_report[f"cluster_{i}"] = dict(cluster_size=len(ith_cluster_samples))
+        s_report[f"cluster_{i}"]["cluster_s_mean"] = ith_cluster_samples.mean()
 
         # sort datapoints according to silhouette sample values
         ith_cluster_samples.sort()
@@ -107,3 +128,10 @@ def silhouette_inspection_pipelined(
 
         # Compute the new y_lower for next plot
         y_lower = y_upper + 10
+
+    # check if plot must be displayed
+    if not display_figure:
+        # don't display
+        plt.close()
+
+    return s_report        
