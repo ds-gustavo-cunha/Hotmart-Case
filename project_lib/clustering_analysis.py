@@ -20,7 +20,8 @@ def silhouette_inspection(
     dataframe: pd.DataFrame,
     labels: pd.Series,
     model_name: str = None,
-    display_figure: bool = True
+    display_figure: bool = True,
+    save_fig: str = None
 ) -> dict:
     """      
     Plot silhouette score and shape for each cluster.
@@ -34,6 +35,7 @@ def silhouette_inspection(
             sklearn.metrics.silhouette_score.
         model_name: a str with name to display on plot
         display_figure: a bool to indicate whether to plot silhouettes or not
+        save_fig: a str with the path to save figure
         
     Return
         s_report: a dict with mean silhoutte 
@@ -46,6 +48,8 @@ def silhouette_inspection(
     if model_name is not None: 
         validate_input_types({"model_name": model_name}, (str,))
     validate_input_types({"display_figure": display_figure}, (bool,))
+    if save_fig is not None:
+        validate_input_types({"save_fig": save_fig}, (str,))
 
     # import required libraries
     from   sklearn.metrics   import silhouette_samples, silhouette_score
@@ -128,6 +132,11 @@ def silhouette_inspection(
 
         # Compute the new y_lower for next plot
         y_lower = y_upper + 10
+
+    # check if user wants to save figure
+    if save_fig is not None:
+        # save figure
+        plt.savefig(save_fig, facecolor="white", bbox_inches="tight")
 
     # check if plot must be displayed
     if not display_figure:
